@@ -1,3 +1,14 @@
+
+let shortArrayButton = false;
+ const buttonId = document.getElementById('sort_button');
+
+buttonId.addEventListener('click', ()=>{
+      shortArrayButton = true
+      console.log(shortArrayButton);
+      handleVideoCategory('1000')
+})
+
+console.log(shortArrayButton);
 const pHeroYouTube = async () => {
       const responsive = await fetch('https://openapi.programming-hero.com/api/videos/categories');
       const data = await responsive.json();
@@ -20,7 +31,7 @@ const handleVideoCategory = async (video_id) => {
       const data = await res.json();
 
       const videoData = data.data
-      console.log(videoData);
+     
 
       const errorMassage = document.getElementById('error-massage');
       errorMassage.innerHTML=''
@@ -40,8 +51,10 @@ const handleVideoCategory = async (video_id) => {
       const videoCardContainer = document.getElementById('video_card_container');
       videoCardContainer.innerHTML = '';
       
-      videoData.forEach((video) => {
-            console.log(video)
+      shortArrayButton ? videoData.sort(( a, b ) =>{
+            return parseFloat(b.others.views )- parseFloat(a.others.views)
+      }).forEach((video) => {
+            // console.log(video)
             videoDiv = document.createElement('div')
             videoDiv.innerHTML = `
             <div class="" >
@@ -59,7 +72,33 @@ const handleVideoCategory = async (video_id) => {
                               <p class="text-[#171717b3] text-lg font-bold">${video?.authors[0]?.profile_name}</p>
                               <small class="">${video?.authors[0]?.verified ? "✅" : ""}</small>
                               </div>
-                              <p  id="total-views" class="text-[#171717b3] text-base font-medium">total views:${video?.others?.views}</p>
+                              <p  id="total-views" class="text-[#171717b3] text-base font-medium"><i class="text-[#297bff] fa-solid fa-eye"></i>    ${video?.others?.views}</p>
+                        </div>
+                  </div>
+            </div>
+
+            `
+            videoCardContainer.appendChild(videoDiv)
+      }) : videoData.forEach((video) => {
+            // console.log(video)
+            videoDiv = document.createElement('div')
+            videoDiv.innerHTML = `
+            <div class="" >
+                  <div class="pb-5 ">
+                        <img class=" rounded-lg w-[400px] h-[220px] mt-5" src="${video?.thumbnail}" alt="">
+                        
+                  </div>
+                  <div class="flex gap-3">
+                        <div>
+                              <img class=" rounded-full w-[30px] h-[30px]" src="${video?.authors[0]?.profile_picture}" alt="">
+                        </div>
+                        <div>
+                              <h1 class="text-xl font-family font-bold">${video?.title}</h1>
+                              <div class="flex gap-1 items-center justify-start">
+                              <p class="text-[#171717b3] text-lg font-bold">${video?.authors[0]?.profile_name}</p>
+                              <small class="">${video?.authors[0]?.verified ? "✅" : ""}</small>
+                              </div>
+                              <p  id="total-views" class="text-[#171717b3] text-base font-medium"><i class="text-[#297bff] fa-solid fa-eye"></i>    ${video?.others?.views}</p>
                         </div>
                   </div>
             </div>
